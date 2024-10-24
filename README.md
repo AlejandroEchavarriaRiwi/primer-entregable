@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Instrucciones para ejecutar la aplicación
+Clonar el repositorio
+Si aún no tienes el proyecto en tu máquina local, primero debes clonar el repositorio de GitHub. Abre tu terminal y ejecuta el siguiente comando:
 
-## Getting Started
+bash
+Copiar código
+git clone https://github.com/usuario/nombre-del-repositorio.git
+Cambia el valor de https://github.com/usuario/nombre-del-repositorio.git por la URL de tu repositorio.
 
-First, run the development server:
+Acceder al directorio del proyecto
+Una vez que el repositorio esté clonado, navega al directorio del proyecto con:
 
-```bash
+bash
+Copiar código
+cd nombre-del-repositorio
+Instalar dependencias
+Antes de ejecutar la aplicación, necesitas instalar todas las dependencias necesarias. Asegúrate de tener Node.js instalado. Para instalar las dependencias, usa el siguiente comando:
+
+bash
+Copiar código
+npm install
+Este comando instalará todas las bibliotecas y paquetes definidos en el archivo package.json.
+
+
+Ejecutar la aplicación en modo de desarrollo
+Una vez que las dependencias estén instaladas y las variables de entorno configuradas, puedes iniciar el servidor de desarrollo con:
+
+bash
+Copiar código
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Este comando iniciará el servidor de desarrollo, y la aplicación estará disponible en http://localhost:3000.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acceder a la aplicación
+Abre tu navegador web y navega a la siguiente URL:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+plaintext
+Copiar código
+http://localhost:3000
+Desde aquí, podrás interactuar con la aplicación en modo de desarrollo. Los cambios que realices en el código se reflejarán automáticamente sin necesidad de reiniciar el servidor.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Compilar para producción
+Si quieres preparar la aplicación para un entorno de producción, puedes compilar el proyecto utilizando el siguiente comando:
 
-## Learn More
+bash
+Copiar código
+npm run build
+Esto generará una versión optimizada del proyecto en la carpeta /.next. Luego, puedes iniciar el servidor de producción con:
 
-To learn more about Next.js, take a look at the following resources:
+bash
+Copiar código
+npm start
+Solución de problemas comunes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Error de dependencia faltante: Asegúrate de haber ejecutado npm install correctamente.
+Variables de entorno incorrectas: Verifica el archivo .env.local y asegúrate de que los valores sean correctos y estén bien escritos.
+Error de puerto ocupado: Si el puerto 3000 ya está en uso, puedes cambiar el puerto ejecutando npm run dev -- -p 3001, donde 3001 es el nuevo puerto.
+Si tienes algún problema, puedes consultar la documentación de Next.js o revisar los logs de la terminal para identificar posibles errores.
