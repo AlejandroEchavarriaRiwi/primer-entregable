@@ -78,6 +78,8 @@ const Card: React.FC<ICard> = ({
           onClick={onSecondButtonClick} 
           backgroundColor="#ffffff"
           border='1px solid rgb(229, 231, 235)'
+          hover='rgb(254, 242, 242)'
+          hovercolor='rgb(220, 38, 38)'
         />
       </ButtonContainer>
     </CardContainer>

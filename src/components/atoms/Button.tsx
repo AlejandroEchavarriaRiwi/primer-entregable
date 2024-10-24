@@ -18,6 +18,7 @@ interface IButton {
   color?: string;
   height?: string;
   hover?: string;
+  hovercolor?: string;
 }
 
 
@@ -33,6 +34,7 @@ const Button = styled.button<{
   color?: string;
   height?: string;
   hover?: string;
+  hovercolor?: string;
 }>`
   background-color: ${({ backgroundColor, itemType, theme }) => backgroundColor || (itemType === 'company' ? theme.colors.primary : theme.colors.secondary)};
   color: ${({color})=> color || "white"};
@@ -52,6 +54,7 @@ const Button = styled.button<{
 
   &:hover {
     background-color: ${({hover}) => hover || 'null'};
+    color: ${({hovercolor}) => hovercolor || 'null'};
   }
 `;
 
@@ -70,6 +73,7 @@ const IButton: React.FC<IButton> = ({
   color,
   height,
   hover,
+  hovercolor,
 }) => {
   const itemType = useStore((state) => state.itemType); // Acceder al estado global
 
@@ -87,6 +91,7 @@ const IButton: React.FC<IButton> = ({
       color={color}
       height={height}
       hover={hover}
+      hovercolor={hovercolor}
     >
       {icon}
       {label}
