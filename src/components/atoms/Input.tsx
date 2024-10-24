@@ -8,14 +8,14 @@ interface IInput {
   placeholder?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  icon?: React.ReactNode;
-  borderRadius?: string;
-  label?: string;
-  itemType?: string;
-  paddingleft?: string;
+  $icon?: React.ReactNode;
+  $borderradius?: string;
+  $label?: string;
+  $itemType?: string;
+  $paddingleft?: string;
 }
 
-const InputWrapper = styled.div<{ borderRadius?: string }>`
+const InputWrapper = styled.div<{ $borderradius?: string }>`
   display: flex;
   align-items: center;
   position: relative;
@@ -23,17 +23,17 @@ const InputWrapper = styled.div<{ borderRadius?: string }>`
 `;
 
 const StyledInput = styled.input<{ 
-  borderRadius?: string
-  paddingleft?: string;
+  $borderradius?: string
+  $paddingleft?: string;
   label?: string;
   itemType?: string;
  }>`
   background-color: transparent;
   font-family: 'Onest', sans-serif;
   padding: 0.5rem 1rem;/* Espacio para el ícono */
-  padding-left: ${(props) => props.paddingleft || "0.5rem"};
+  padding-left: ${(props) => props.$paddingleft || "0.5rem"};
   font-size: 1rem;
-  border-radius: ${(props) => props.borderRadius || '0.375rem'};
+  border-radius: ${(props) => props.$borderradius || '0.375rem'};
   border: 2px solid #d1d5db;
   width: 100%;
   box-sizing: border-box;
@@ -62,15 +62,15 @@ const Input: React.FC<IInput> = ({
   placeholder,
   value,
   onChange,
-  icon,
-  borderRadius,
-  paddingleft,
+  $icon,
+  $borderradius,
+  $paddingleft,
 }) => {
   const itemType = useStore((state) => state.itemType)
 
   return (
-    <InputWrapper borderRadius={borderRadius}>
-      {icon && <IconWrapper>{icon}</IconWrapper>}
+    <InputWrapper $borderradius={$borderradius}>
+      {$icon && <IconWrapper>{$icon}</IconWrapper>}
       <StyledInput
         id={name}
         name={name}
@@ -79,8 +79,8 @@ const Input: React.FC<IInput> = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        borderRadius={borderRadius}
-        paddingleft={paddingleft}
+        $borderradius={$borderradius}
+        $paddingleft={$paddingleft}
       />
     </InputWrapper>
   );

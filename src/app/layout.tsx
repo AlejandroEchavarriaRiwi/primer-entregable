@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Onest } from "next/font/google"
 import "./globals.css";
+import "./style.sass"
 import { ThemeClientProvider } from "@/ui/provider/Provider";
 
 const onest = Onest({ weight: "400", subsets: ["latin"] })
@@ -17,11 +18,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <ThemeClientProvider>
+      
         <body className={onest.className}>
-          {children}
+          <div className="Background">
+            <ThemeClientProvider>
+              {children}
+            </ThemeClientProvider>
+          </div>
+
         </body>
-      </ThemeClientProvider>
+      
     </html>
   );
 }

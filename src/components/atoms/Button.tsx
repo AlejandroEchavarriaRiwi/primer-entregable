@@ -10,15 +10,15 @@ interface IButton {
   icon?: React.ReactNode;
   disabled?: boolean;
   size?: 'small' | 'medium' | 'large';
-  backgroundColor?: string;
-  border?: string;
-  borderRadius?: string;
+  $backgroundColor?: string;
+  $border?: string;
+  $borderRadius?: string;
   width?: string;
   padding?: string;
-  color?: string;
+  $color?: string;
   height?: string;
-  hover?: string;
-  hovercolor?: string;
+  $hover?: string;
+  $hovercolor?: string;
 }
 
 
@@ -26,20 +26,20 @@ const Button = styled.button<{
   itemType: string; 
   size: string; 
   disabled: boolean; 
-  backgroundColor?: string; 
-  border?: string; 
-  borderRadius?: string; 
+  $backgroundColor?: string; 
+  $border?: string; 
+  $borderRadius?: string; 
   width?: string; 
   padding?: string;
-  color?: string;
+  $color?: string;
   height?: string;
-  hover?: string;
-  hovercolor?: string;
+  $hover?: string;
+  $hovercolor?: string;
 }>`
-  background-color: ${({ backgroundColor, itemType, theme }) => backgroundColor || (itemType === 'company' ? theme.colors.primary : theme.colors.secondary)};
+  background-color: ${({ $backgroundColor, itemType, theme }) => $backgroundColor || (itemType === 'company' ? theme.colors.primary : theme.colors.secondary)};
   color: ${({color})=> color || "white"};
-  border: ${({ border }) => border || 'none'}; // Usar la prop border
-  border-radius: ${({ borderRadius }) => borderRadius || '0.25rem'}; // Usar la prop borderRadius
+  border: ${({ $border }) => $border || 'none'}; // Usar la prop border
+  border-radius: ${({ $borderRadius }) => $borderRadius || '0.25rem'}; // Usar la prop borderRadius
   width: ${({ width }) => width || 'auto'}; // Usar la prop width
   padding: ${({ padding, size }) => padding || (size === 'small' ? '0.25rem 0.5rem' : size === 'large' ? '0.75rem 1.5rem' : '0.5rem 1rem')}; // Usar la prop padding
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
@@ -53,8 +53,8 @@ const Button = styled.button<{
   gap: 8px;
 
   &:hover {
-    background-color: ${({hover}) => hover || 'null'};
-    color: ${({hovercolor}) => hovercolor || 'null'};
+    background-color: ${({$hover}) => $hover || 'null'};
+    color: ${({$hovercolor}) => $hovercolor || 'null'};
   }
 `;
 
@@ -65,15 +65,15 @@ const IButton: React.FC<IButton> = ({
   icon,
   disabled = false,
   size = 'medium',
-  backgroundColor,
-  border,
-  borderRadius,
+  $backgroundColor,
+  $border,
+  $borderRadius,
   width,
   padding,
-  color,
+  $color,
   height,
-  hover,
-  hovercolor,
+  $hover,
+  $hovercolor,
 }) => {
   const itemType = useStore((state) => state.itemType); // Acceder al estado global
 
@@ -83,15 +83,15 @@ const IButton: React.FC<IButton> = ({
       size={size}
       disabled={disabled}
       itemType={itemType}
-      backgroundColor={backgroundColor}
-      border={border} // Pasar border
-      borderRadius={borderRadius} // Pasar borderRadius
+      $backgroundColor={$backgroundColor}
+      $border={$border} // Pasar border
+      $borderRadius={$borderRadius} // Pasar borderRadius
       width={width} // Pasar width
       padding={padding} // Pasar padding
-      color={color}
+      color={$color}
       height={height}
-      hover={hover}
-      hovercolor={hovercolor}
+      $hover={$hover}
+      $hovercolor={$hovercolor}
     >
       {icon}
       {label}

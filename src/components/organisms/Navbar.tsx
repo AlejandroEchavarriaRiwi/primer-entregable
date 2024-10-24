@@ -92,31 +92,31 @@ const Navbar: React.FC<INavbar> = ({
             icon={<BriefIcon itemType={itemType} />}
             label={secondButtonLabel}
             onClick={onSecondButtonClick}
-            borderRadius="20px"
-            backgroundColor={itemType === 'job' ? undefined : 'rgb(243, 244, 246)'}
-            color={itemType === 'job' ? undefined : "rgb(31, 41, 55)"}
-            hover={itemType === 'company' ? undefined : "rgb(147, 51, 234)"}       
+            $borderRadius="20px"
+            $backgroundColor={itemType === 'job' ? undefined : 'rgb(243, 244, 246)'}
+            $color={itemType === 'job' ? undefined : "rgb(31, 41, 55)"}
+            $hover={itemType === 'company' ? undefined : "rgb(147, 51, 234)"}       
           />
           <IButton
             icon={<BuildingIcon itemType={itemType} />} 
             label={firstButtonLabel}
             onClick={onFirstButtonClick}
-            borderRadius="20px"
-            backgroundColor={itemType === 'company' ? undefined : 'rgb(243, 244, 246)'}
-            color={itemType === 'company' ? undefined : "rgb(31, 41, 55)"}
-            hover={itemType === 'job' ? undefined : "rgb(219, 39, 119)"}
+            $borderRadius="20px"
+            $backgroundColor={itemType === 'company' ? undefined : 'rgb(243, 244, 246)'}
+            $color={itemType === 'company' ? undefined : "rgb(31, 41, 55)"}
+            $hover={itemType === 'job' ? undefined : "rgb(219, 39, 119)"}
           />
         </ButtonContainer>
         <SearchContainer>
           <Input
-            paddingleft="3rem"
-            borderRadius="20px"
+            $paddingleft="3rem"
+            $borderradius="20px"
             type="text"
             placeholder="Buscar..."
             value={searchQuery}
             onChange={handleSearchChange} // Use the handler for search
             name="Buscar..."
-            icon={<SearchIcon />}
+            $icon={<SearchIcon />}
             />
         </SearchContainer>
       </PropsWrapper>

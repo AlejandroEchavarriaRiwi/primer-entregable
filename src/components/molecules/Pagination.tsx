@@ -39,16 +39,16 @@ const Pagination: React.FC<IPagination> = ({ currentPage, totalPages, onNext, on
         icon={<PreviousIcon/>}
         onClick={onPrevious}
         disabled={currentPage === 1} // Deshabilitar si es la primera página
-        backgroundColor={"rgb(229, 231, 235)"}
-        borderRadius={"20px"}
+        $backgroundColor={"rgb(229, 231, 235)"}
+        $borderRadius={"20px"}
       />
       <PageNumber>{`Pagina ${currentPage} de ${totalPages}`}</PageNumber>
       <IButton
         icon={<NextIcon/>}
         onClick={onNext}
         disabled={currentPage === totalPages} // Deshabilitar si es la última página
-        backgroundColor={"rgb(229, 231, 235)"}
-        borderRadius={"20px"}
+        $backgroundColor={"rgb(229, 231, 235)"}
+        $borderRadius={"20px"}
       />
     </PaginationContainer>
   );

@@ -123,8 +123,8 @@ const CardContainer: React.FC<ICardContainer> = ({
           label={`Agregar ${type === 'company' ? 'Compañía' : 'Vacante'}`}
           onClick={() => handleOpenModal('add')}
           icon={<AddIcon />}
-          borderRadius='20px'
-          hover={itemType === 'job' ? "rgb(147, 51, 234)" : "rgb(219, 39, 119)"
+          $borderRadius='20px'
+          $hover={itemType === 'job' ? "rgb(147, 51, 234)" : "rgb(219, 39, 119)"
           }
         />
       </TitleContainer>

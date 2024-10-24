@@ -69,17 +69,17 @@ const Card: React.FC<ICard> = ({
           width='45px'
           icon={<EditIcon />} 
           onClick={onFirstButtonClick} 
-          backgroundColor="rgb(255, 255, 255)"
-          border='1px solid rgb(229, 231, 235)'
+          $backgroundColor="rgb(255, 255, 255)"
+          $border='1px solid rgb(229, 231, 235)'
         />
         <IButton
           width='45px'
           icon={<DeleteIcon />} 
           onClick={onSecondButtonClick} 
-          backgroundColor="#ffffff"
-          border='1px solid rgb(229, 231, 235)'
-          hover='rgb(254, 242, 242)'
-          hovercolor='rgb(220, 38, 38)'
+          $backgroundColor="#ffffff"
+          $border='1px solid rgb(229, 231, 235)'
+          $hover='rgb(254, 242, 242)'
+          $hovercolor='rgb(220, 38, 38)'
         />
       </ButtonContainer>
     </CardContainer>

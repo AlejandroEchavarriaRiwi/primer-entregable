@@ -104,7 +104,7 @@ const JobForm: React.FC<JobFormProps> = ({ initialData, onSubmit }) => {
             label={"Guardar"} 
             onClick={handleSubmit} 
             width={"100%"}
-            hover={itemType === 'job' ? "rgb(147, 51, 234)" : "rgb(219, 39, 119)"}
+            $hover={itemType === 'job' ? "rgb(147, 51, 234)" : "rgb(219, 39, 119)"}
              />
             </div>
         </form>
