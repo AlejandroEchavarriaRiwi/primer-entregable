@@ -28,12 +28,6 @@ cd primer-entregable
 npm install
 ```
 
-## Configuración
-Asegúrate de tener todas las variables de entorno necesarias configuradas correctamente:
-
-1. Crea un archivo `.env.local` en la raíz del proyecto
-2. Configura las variables necesarias según el ejemplo proporcionado
-
 ## Ejecución
 
 ### Iniciar en Modo Desarrollo 🔥
