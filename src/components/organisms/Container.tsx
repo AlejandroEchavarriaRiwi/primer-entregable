@@ -31,7 +31,8 @@ const TitleContainer = styled.div`
 `
 
 const GridContainer = styled.div`
-  width: 100%;
+  width: 80%;
+  margin-top: 20px;
   display: grid;
   justify-content: center;
   align-items: center;
@@ -99,22 +100,15 @@ const CardContainer: React.FC<ICardContainer> = ({
     if (type === 'company') {
       return {
         name: card.title,
-        location: card.city,
-        phone: card.phone,
-        industry: '',
-        size: '',
-        contactEmail: '',
+        ubication: card.city,
+        contact: card.phone,
       } as CompanyFormData;
     } else {
       return {
         title: card.title,
-        location: card.city,
-        phone: card.phone,
+        description: card.city,
+        state: card.phone,
         company: '',
-        type: '',
-        experience: '',
-        salary: '',
-        description: '',
       } as JobFormData;
     }
   };

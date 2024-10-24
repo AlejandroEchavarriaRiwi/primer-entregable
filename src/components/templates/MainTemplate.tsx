@@ -9,9 +9,6 @@ import styled from "styled-components";
 import { useStore } from '../../store/store';
 
 const BackGround = styled.div`
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100vh;
     background: linear-gradient(135deg,rgb(192, 132, 252),rgb(236, 72, 153),rgb(239, 68, 68));
@@ -27,7 +24,7 @@ const MainWrapper = styled.div`
     background-color: rgb(255, 255, 255);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
 `;
 
 interface CardData {

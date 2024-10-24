@@ -6,6 +6,7 @@ import Pagination from '../molecules/Pagination';
 const FooterContainer = styled.footer`
   padding: 1rem;
   text-align: center;
+  margin-bottom: 30px;
 `;
 
 interface IFooterProps {

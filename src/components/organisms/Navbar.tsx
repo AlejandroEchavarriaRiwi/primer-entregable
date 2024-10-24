@@ -34,6 +34,8 @@ const NavbarContainer = styled.nav`
   justify-content: space-between;
   padding: 1rem 2rem;
   text-align: center;
+  margin-top: 50px;
+  gap:40px;
 `;
 
 const Title = styled.h1`
