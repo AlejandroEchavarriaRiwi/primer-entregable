@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Onest } from "next/font/google"
 import "./globals.css";
-import "./style.sass"
 import { ThemeClientProvider } from "@/ui/provider/Provider";
 
 const onest = Onest({ weight: "400", subsets: ["latin"] })
