@@ -1,12 +1,24 @@
-'use client';
+"use client";
 import React, { useState, useCallback } from "react";
-import CardContainer from "@/components/organisms/Container";
-import Navbar from "@/components/organisms/Navbar";
-import Footer from "@/components/organisms/Footer";
 import { CompanyFormData } from "../molecules/CompanyForm";
 import { JobFormData } from "../molecules/JobForm";
+import Navbar from "../organisms/Navbar";
+import CardContainer from "../organisms/Container";
+import Footer from "../organisms/Footer";
 import styled from "styled-components";
-import { useStore } from '../../store/store';
+import { useStore } from "@/store/store";
+import { ICard, ICompany, IVacant, transformToCard } from "@/types/card.model";
+
+interface HomePageProps {
+  initialCardData: ICompany[];
+  jobData: IVacant[];
+  totalPages: number;
+  navbarConfig: {
+    title: string;
+    firstButtonLabel: string;
+    secondButtonLabel: string;
+  };
+}
 
 const BackGround = styled.div`
     width: 100%;
@@ -19,147 +31,168 @@ const BackGround = styled.div`
     box-sizing: border-box;
 `;
 
-const MainWrapper = styled.div`
-    width: 80%;
-    max-height: 90%; /* Limitar el alto máximo */
-    border-radius: 20px;
-    background-color: rgb(255, 255, 255);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: stretch; /* Permitir que los hijos se ajusten */
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    overflow: hidden; /* Evitar las barras de desplazamiento */
-
-    /* Ajuste del tamaño en pantallas pequeñas */
-    @media (max-width: 768px) {
-        width: 90%; /* Reducir el ancho en pantallas pequeñas */
-        max-height: 95%;
-    }
-
-    @media (max-height: 600px) {
-        max-height: 100%;
-        margin: 10px 0; /* Evitar que el wrapper toque los bordes en pantallas muy bajas */
-    }
-
-    /* Permitir que los hijos internos se adapten proporcionalmente */
-    & > * {
-        flex: 1;
-        min-height: 0;
-    }
+const Container = styled.div`
+  background-color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 80%;
 `;
 
+const MainTemplate = ({
+  initialCardData,
+  jobData,
+  totalPages,
+  navbarConfig,
+}: HomePageProps) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [cardData, setCardData] =
+    useState<(ICompany | IVacant)[]>(initialCardData);
+  const { itemType, setItemType } = useStore();
 
-interface CardData {
-    id: number;
-    title: string;
-    city: string;
-    phone: string;
-    firstButtonLabel: string;
-    secondButtonLabel: string;
-}
+  const isICompany = (card: ICompany | IVacant): card is ICompany => {
+    return (card as ICompany).location !== undefined;
+  };
 
-interface HomePageProps {
-    initialCardData: CardData[];
-    jobData: CardData[];
-    totalPages: number;
-    navbarConfig: {
-        title: string;
-        firstButtonLabel: string;
-        secondButtonLabel: string;
-    };
-}
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+      fetchPageData(currentPage + 1);
+    }
+  };
 
-const HomePage = ({ initialCardData, jobData, totalPages, navbarConfig }: HomePageProps) => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const [cardData, setCardData] = useState(initialCardData);
-    const { itemType, setItemType } = useStore(); // Accede directamente al store
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+      fetchPageData(currentPage - 1);
+    }
+  };
 
-    const handleNext = () => {
-        if (currentPage < totalPages) {
-            setCurrentPage(prev => prev + 1);
+  const fetchPageData = async (page: number) => {
+    try {
+      const response = await fetch(`/api/cards?page=${page}`);
+      const newData = await response.json();
+      setCardData(newData);
+    } catch (error) {
+      console.error("Error fetching page data:", error);
+    }
+  };
+
+  const handleEdit = useCallback((id: string | number) => {
+    setCardData((prevCards) =>
+      prevCards.map((card) => {
+        if (card.id === id) {
+          return {
+            ...card,
+          };
         }
-    };
-
-    const handlePrevious = () => {
-        if (currentPage > 1) {
-            setCurrentPage(prev => prev - 1);
-        }
-    };
-
-    const handleEdit = useCallback((id: number) => {
-        console.log('Editing item with id:', id);
-        // Implementar la lógica de edición
-    }, []);
-
-    const handleDelete = useCallback((id: number) => {
-        console.log('Deleting item with id:', id);
-        // Implementar la lógica de eliminación
-    }, []);
-
-    const handleSearch = useCallback((searchTerm: string) => {
-        console.log('Searching for:', searchTerm);
-        // Implementar la lógica de búsqueda
-    }, []);
-
-    const handleNavbarButtonClick = (type: 'first' | 'second') => {
-        if (type === 'first') {
-            setItemType('company');
-            setCardData(initialCardData);
-        } else {
-            setItemType('job');
-            setCardData(jobData);
-        }
-    };
-
-    const enrichedCardData = cardData.map(card => ({
-        ...card,
-        onFirstButtonClick: () => handleEdit(card.id),
-        onSecondButtonClick: () => handleDelete(card.id)
-    }));
-
-    const handleAddItem = (data: CompanyFormData | JobFormData) => {
-        console.log('Añadiendo:', data);
-    };
-
-    const handleEditItem = (id: number, data: CompanyFormData | JobFormData) => {
-        console.log('Editando id:', id, 'con datos:', data);
-    };
-
-    const handleDeleteItem = (id: number) => {
-        console.log('Eliminando id:', id);
-    };
-
-    const dynamicTitle = itemType === 'company' ? 'Compañías' : 'Vacantes';
-
-    return (
-        <BackGround>
-            <MainWrapper>
-                <Navbar
-                    title={navbarConfig.title}
-                    onFirstButtonClick={() => handleNavbarButtonClick('first')}
-                    onSecondButtonClick={() => handleNavbarButtonClick('second')}
-                    firstButtonLabel={navbarConfig.firstButtonLabel}
-                    secondButtonLabel={navbarConfig.secondButtonLabel}
-                    onSearch={handleSearch}
-                />
-                <CardContainer
-                    title={dynamicTitle}
-                    cardData={enrichedCardData}
-                    type={itemType}
-                    onAdd={handleAddItem}
-                    onEdit={handleEditItem}
-                    onDelete={handleDeleteItem}
-                />
-                <Footer
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onNext={handleNext}
-                    onPrevious={handlePrevious}
-                />
-            </MainWrapper>
-        </BackGround>
+        return card;
+      })
     );
+  }, []);
+
+  const handleDelete = useCallback((id: string | number) => {
+    setCardData((prevCards) => prevCards.filter((card) => card.id !== id));
+  }, []);
+
+  const handleSearch = useCallback(
+    (searchTerm: string) => {
+      if (searchTerm.trim() === "") {
+        setCardData(initialCardData);
+        return;
+      }
+
+      setCardData((prevCards) =>
+        prevCards.filter((card) => {
+          if (isICompany(card)) {
+            return (
+              card.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              card.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              card.contact?.includes(searchTerm)
+            );
+          } else {
+            return (
+              card.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              card.title?.includes(searchTerm)
+            );
+          }
+        })
+      );
+    },
+    [initialCardData]
+  );
+
+  const handleNavbarButtonClick = (type: "first" | "second") => {
+    if (type === "first") {
+      setItemType("company");
+      setCardData(initialCardData);
+    } else {
+      setItemType("vacant");
+      setCardData(jobData);
+    }
+  };
+
+  const enrichedCardData: ICard[] = Array.isArray(cardData)
+    ? cardData.map((card) =>
+        transformToCard(
+          card,
+          itemType, // 'company' o 'vacant'
+          () => handleEdit(card.id),
+          () => handleDelete(card.id)
+        )
+      )
+    : [];
+
+  const handleAddItem = (data: CompanyFormData | JobFormData) => {
+    console.log("Añadiendo:", data);
+  };
+
+  const handleEditItem = (
+    id: string | number,
+    data: CompanyFormData | JobFormData
+  ) => {
+    console.log("Editando id:", id, "con datos:", data);
+    handleEdit(id); // Llama a handleEdit para editar el ítem
+  };
+
+  const handleDeleteItem = (id: string | number) => {
+    console.log("Eliminando id:", id);
+    handleDelete(id); // Llama a handleDelete para eliminar el ítem
+  };
+
+  const dynamicTitle = itemType === "company" ? "Compañías" : "Vacantes";
+
+  return (
+    <BackGround>
+      <Container>
+        <Navbar
+          title={navbarConfig.title}
+          onFirstButtonClick={() => handleNavbarButtonClick("first")}
+          onSecondButtonClick={() => handleNavbarButtonClick("second")}
+          firstButtonLabel={navbarConfig.firstButtonLabel}
+          secondButtonLabel={navbarConfig.secondButtonLabel}
+          onSearch={handleSearch}
+        />
+        <CardContainer
+          title={dynamicTitle}
+          cardData={enrichedCardData}
+          type={itemType}
+          onAdd={handleAddItem}
+          onEdit={handleEditItem}
+          onDelete={handleDeleteItem}
+        />
+        <Footer
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onNext={handleNext}
+          onPrevious={handlePrevious}
+        />
+      </Container>
+    </BackGround>
+  );
 };
 
-export default HomePage;
+export default MainTemplate;

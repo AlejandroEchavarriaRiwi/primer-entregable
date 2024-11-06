@@ -1,17 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import IButton from '../atoms/Button';
 import Input from '../atoms/Input';
 import Label from '../atoms/Label';
 import Select from '../atoms/Select';
 import Textarea from '../atoms/TextArea';
-import { useStore } from '../../store/store';
+import Button from '../atoms/Button';
+import { useRouter } from 'next/navigation'
+import { VacantService } from '@/services/vacantes.service';
+import { toast } from 'react-toastify'
 
 export interface JobFormData {
     title: string;
-    company: string;
     description: string;
-    state: string;
+    status: string;
+    companyId: string;
 }
 
 interface JobFormProps {
@@ -24,31 +26,44 @@ const FormGroup = styled.div`
     margin-bottom: 1rem;
 `;
 
-const JobForm: React.FC<JobFormProps> = ({ initialData, onSubmit }) => {
+const JobForm: React.FC<JobFormProps> = ({ initialData }) => {
     const [formData, setFormData] = React.useState<JobFormData>(
         initialData || {
             title: '',
             description: '',
-            state: '',
-            company: '',
+            status: '',
+            companyId: '',
         }
     );
+    const router = useRouter();
+    const vacantService = new VacantService();
 
-    const handleSubmit = () => {
-        onSubmit(formData);
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        try {
+            const response = await vacantService.create(formData)
+            if (response) {
+                toast.success('The vacant was created successfully')
+                router.refresh()
+            } else {
+                console.log('erorr')
+            }
+        } catch (error) {
+            console.error("Error al crear el coder:", error)
+        }
+
     };
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const itemType = useStore((state) => state.itemType);
 
     return (
         <form onSubmit={handleSubmit}>
             <FormGroup>
-                <Label htmlFor="title" text="Título" />
+                <Label htmlFor="title" text="Título de la Vacante" />
                 <Input
                     type="text"
                     name="title"
@@ -68,45 +83,36 @@ const JobForm: React.FC<JobFormProps> = ({ initialData, onSubmit }) => {
             </FormGroup>
 
             <FormGroup>
-                <Label htmlFor="state" text="Estado" />
+                <Label htmlFor="status" text="Estado" />
                 <Select
-                    name="state"
-                    value={formData.state}
+                    name="status"
+                    value={formData.status}
                     onChange={handleChange}
                     options={[
-                        { value: '', label: 'OPEN' },
-                        { value: 'fullTime', label: 'Tiempo Completo' },
-                        { value: 'partTime', label: 'Medio Tiempo' },
-                        { value: 'contract', label: 'Contrato' },
-                        { value: 'internship', label: 'Práctica' },
+                        { value: '', label: 'Seleccionar Tipo' },
+                        { value: 'ACTIVE', label: 'OPEN' },
+                        { value: 'close', label: 'CLOSE' },
                     ]}
                 />
             </FormGroup>
 
             <FormGroup>
-                <Label htmlFor="company" text="Compañia" />
-                <Select
-                    name="company"
-                    value={formData.company}
+                <Label htmlFor="title" text="Company id" />
+                <Input
+                    type="text"
+                    name="companyId"
+                    value={formData.companyId}
                     onChange={handleChange}
-                    options={[
-                        { value: '', label: 'Selecciona una compañía' },
-                        { value: 'entry', label: 'Entry Level' },
-                        { value: 'junior', label: 'Junior' },
-                        { value: 'mid', label: 'Mid Level' },
-                        { value: 'senior', label: 'Senior' },
-                    ]}
                 />
             </FormGroup>
 
-            <div>
-            <IButton 
-            label={"Guardar"} 
-            onClick={handleSubmit} 
-            width={"100%"}
-            $hover={itemType === 'job' ? "rgb(147, 51, 234)" : "rgb(219, 39, 119)"}
-             />
-            </div>
+            <Button
+                width='100%'
+                borderRadius='0.5rem'
+                label="Agregar"
+                onClick={(e) => handleSubmit(e)}
+                size="0.5em"
+            />
         </form>
     );
 };

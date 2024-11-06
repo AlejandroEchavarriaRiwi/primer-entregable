@@ -1,8 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import IButton from '../atoms/Button';
+import Button from '../atoms/Button';
 import Label from '../atoms/Label';
 import Input from '../atoms/Input';
+import { useRouter } from 'next/navigation'
+import { CompanyService } from '@/services/company.service';
+import { toast } from 'react-toastify'
 
 const FormGroup = styled.div`
   margin-bottom: 1rem;
@@ -10,7 +13,7 @@ const FormGroup = styled.div`
 
 export interface CompanyFormData {
   name: string;
-  ubication: string;
+  location: string;
   contact: string;
 }
 
@@ -20,18 +23,32 @@ interface CompanyFormProps {
   onCancel: () => void;
 }
 
-const CompanyForm: React.FC<CompanyFormProps> = ({ initialData, onSubmit }) => {
+const CompanyForm: React.FC<CompanyFormProps> = ({ initialData }) => {
   const [formData, setFormData] = React.useState<CompanyFormData>(
     initialData || {
       name: '',
-      ubication: '',
+      location: '',
       contact: '',
     }
   );
+  const router = useRouter()
+  const companyService = new CompanyService()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    try {
+      const response = await companyService.create(formData)
+      if (response) {
+        toast.success('The company was created successfully')
+        router.refresh()
+      } else {
+        console.log('erorr')
+      }
+    } catch (error) {
+      console.error("Error al crear el coder:", error)
+    }
+
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -42,39 +59,45 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ initialData, onSubmit }) => {
   return (
     <form onSubmit={handleSubmit}>
       <FormGroup>
-        <Label htmlFor="name" text="Nombre de la empresa" />
+        <Label htmlFor="name" text="Nombre" />
         <Input
           type="text"
           name="name"
           value={formData.name}
           onChange={handleChange}
+
         />
       </FormGroup>
 
       <FormGroup>
-        <Label htmlFor="ubication" text="Ubicación" />
+        <Label htmlFor="location" text="Ubicacion" />
         <Input
           type="text"
-          name="ubication"
-          value={formData.ubication}
+          name="location"
+          value={formData.location}
           onChange={handleChange}
+
         />
       </FormGroup>
 
       <FormGroup>
-        <Label htmlFor="name" text="Contacto" />
+        <Label htmlFor="contact" text="Telefono" />
         <Input
-          type="text"
+          type="tel"
           name="contact"
           value={formData.contact}
           onChange={handleChange}
         />
       </FormGroup>
 
-
-      <div>
-        <IButton label={"Guardar"} onClick={handleSubmit} width={"100%"} />
-      </div>
+      <Button
+        width='100%'
+        borderRadius='0.5rem'
+        label="Agregar"
+        size="0.5em"
+        bg={(theme) => theme.colors.accent.pink}
+        onClick={(e) => e}
+      />
     </form>
   );
 };

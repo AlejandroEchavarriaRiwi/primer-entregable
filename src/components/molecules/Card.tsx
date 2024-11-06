@@ -1,29 +1,10 @@
+// components/Card.tsx
 import React from 'react';
 import styled from 'styled-components';
 import IButton from '../atoms/Button';
-import { Pencil, Trash2  } from 'lucide-react';
-
-const EditIcon = styled(Pencil)`
-  width: 15px;
-  color: ${({theme})=> theme.colors.secondary};
-  cursor: pointer;
-`;
-
-const DeleteIcon = styled(Trash2)`
-  width: 15px;
-  color:${({theme})=> theme.colors.delete};
-  cursor: pointer;
-`;
-
-interface ICard {
-  title: string;
-  city: string;
-  phone: string;
-  onFirstButtonClick: () => void;
-  onSecondButtonClick: () => void;
-  firstButtonLabel: string;
-  secondButtonLabel: string;
-}
+import { Pencil, Trash2 } from 'lucide-react';
+import { useStore } from '@/store/store';
+import { ICard } from '@/types/card.model';
 
 const CardContainer = styled.div`
   background-color: white;
@@ -47,39 +28,62 @@ const CardInfo = styled.p`
 
 const ButtonContainer = styled.div`
   display: flex;
+  gap: 8px;
   justify-content: end;
-  gap: 3px;
   margin-top: 1rem;
 `;
 
 const Card: React.FC<ICard> = ({
+  name,
+  location,
+  contact,
   title,
-  city,
-  phone,
+  description,
+  status,
+  company,
   onFirstButtonClick,
   onSecondButtonClick,
 }) => {
+  const { itemType } = useStore();
+
   return (
     <CardContainer>
-      <CardTitle>{title}</CardTitle>
-      <CardInfo>Ciudad: {city}</CardInfo>
-      <CardInfo>Teléfono: {phone}</CardInfo>
+
+      {itemType === 'vacant' && (
+        <>
+          <CardTitle>{name}</CardTitle>
+          <CardTitle>{title}</CardTitle>
+          <CardInfo>Descripción: {description}</CardInfo>
+          <CardInfo>Estado: {status}</CardInfo>
+          <CardInfo>Empresa: {company?.name}</CardInfo>
+        </>
+      )}
+
+      {itemType === 'company' && (
+        <>
+          <CardTitle>{name}</CardTitle>
+          <CardInfo>Ciudad: {location}</CardInfo>
+          <CardInfo>Teléfono: {contact}</CardInfo>
+        </>
+      )}
+
       <ButtonContainer>
         <IButton
-          width='45px'
-          icon={<EditIcon />} 
-          onClick={onFirstButtonClick} 
-          $backgroundColor="rgb(255, 255, 255)"
-          $border='1px solid rgb(229, 231, 235)'
-        />
+          icon={<Pencil />}
+          iconColor="rgb(168, 85, 247)"
+          bg='rgb(255, 255, 255)'
+          borderRadius="0.5rem"
+          border="2px solid  rgb(229, 231, 235)"
+          onClick={onFirstButtonClick}
+          size='0.5rem' />
         <IButton
-          width='45px'
-          icon={<DeleteIcon />} 
-          onClick={onSecondButtonClick} 
-          $backgroundColor="#ffffff"
-          $border='1px solid rgb(229, 231, 235)'
-          $hover='rgb(254, 242, 242)'
-          $hovercolor='rgb(220, 38, 38)'
+          onClick={onSecondButtonClick}
+          icon={<Trash2 />}
+          iconColor="rgb(239, 68, 68)"
+          iconSize='2rem'
+          bg='rgb(255, 255, 255)'
+          borderRadius="0.5rem"
+          border="2px solid  rgb(229, 231, 235)"
         />
       </ButtonContainer>
     </CardContainer>

@@ -2,36 +2,64 @@ import { DefaultTheme } from "styled-components";
 
 export const theme: DefaultTheme = {
   colors: {
-    primary: "rgb(236, 72, 153)",
-    secondary: "rgb(168, 85, 247)",
-    background: "#F5F5F5",
-    white: "#fafafa",
-    accent: "rgb(211, 54, 89)",
-    danger: "#FF4C51",
-    text: "#2f2b3de6",
-    grayLight: "#e0e0e0",
-    disabled: "#9e9e9e",
-    shadowPrimaryColor: "0px 2px 6px rgb(235 61 99 / 0.3)",
-    delete: "rgb(239, 68, 68)",
-    moradoclaro: "rgb(192, 132, 252)",
-    rosa: "rgb(236, 72, 153)",
-    rojo: "rgb(239, 68, 68)",
-    grisclaro: "rgb(243, 244, 246)",
-    grismedio: "rgb(75, 85, 99)",
-    focusmorado: "rgb(233, 213, 255)",
-    focusrosa: "rgb(251, 207, 232)",
-    hovertextoeliminar: "rgb(220, 38, 38)",
-    hoverfondoeliminar: "rgb(254, 242, 242)",
-    hovercompania: "rgb(219, 39, 119)",
-    hovervacantes: "rgb(147, 51, 234)"
-  },
-  fonts: {
-    body: "Arial, sans-serif",
-    heading: "Georgia, serif",
-  },
-  shape: {
-    borderRadius: "6px",
-  },
+    background: {
+        gradient: {
+            lightPurple: 'rgb(192, 132, 252)',
+            pink: 'rgb(236, 72, 153)',
+            red: 'rgb(239, 68, 68)'
+        },
+        white: 'rgb(255, 255, 255)',
+        gray: {
+            tabs: 'rgb(243, 244, 246)',     // pestañas inactivas
+            pagination: 'rgb(229, 231, 235)' // botones de paginación
+        }
+    },
+    text: {
+        dark: 'rgb(31, 41, 55)',    // Negro/Gris oscuro
+        medium: 'rgb(75, 85, 99)',  // Gris medio
+        light: 'rgb(107, 114, 128)', // Gris claro
+        white: 'rgb(255, 255, 255)'
+    },
+    accent: {
+        purple: {
+            default: 'rgb(168, 85, 247)',  // vacantes normal
+            hover: 'rgb(147, 51, 234)'     // vacantes hover
+        },
+        pink: {
+            default: 'rgb(236, 72, 153)',  // compañías normal
+            hover: 'rgb(219, 39, 119)'     // compañías hover
+        },
+        red: {
+            text: 'rgb(239, 68, 68)',      // botón eliminar texto
+            hoverText: 'rgb(220, 38, 38)', // botón eliminar hover texto
+            hoverBg: 'rgb(254, 242, 242)'  // botón eliminar hover fondo
+        }
+    },
+    border: {
+        gray: 'rgb(229, 231, 235)',
+        focus: {
+            purple: 'rgb(233, 213, 255)',
+            pink: 'rgb(251, 207, 232)'
+        }
+    }
+},
+// Mantuve las otras propiedades del theme anterior
+fonts: {
+    primary: "'Inter', sans-serif",
+    secondary: "'Roboto', sans-serif"
+},
+spacing: {
+    xs: '0.25rem',
+    sm: '0.5rem',
+    md: '1rem',
+    lg: '1.5rem',
+    xl: '2rem'
+},
+breakpoints: {
+    mobile: '320px',
+    tablet: '768px',
+    desktop: '1024px'
+}
 };
 
 export default theme;

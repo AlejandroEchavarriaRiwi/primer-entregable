@@ -1,103 +1,94 @@
 import React from 'react';
-import styled from 'styled-components';
-import { useStore } from '../../store/store';
+import styled, { DefaultTheme } from 'styled-components';
 
+// Interface para las props del componente styled
+interface StyledButtonProps {
+  $background: string | ((theme: DefaultTheme) => { default: string; hover: string; }); // bg puede ser una función que devuelve un objeto con default y hover
+  $size: string;
+  $borderRadius?: string;
+  $border?: string;
+  $color?: string;
+  $width?: string;
+}
 
-
+// Interface para las props del componente Button
 interface IButton {
   label?: string;
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   icon?: React.ReactNode;
   disabled?: boolean;
-  size?: 'small' | 'medium' | 'large';
-  $backgroundColor?: string;
-  $border?: string;
-  $borderRadius?: string;
+  bg?: string | ((theme: DefaultTheme) => { default: string; hover: string; }); // Modificado para aceptar un objeto
+  size?: string;
+  borderRadius?: string;
+  iconColor?: string;
+  iconSize?: string;
+  border?: string;
+  color?: string;
   width?: string;
-  padding?: string;
-  $color?: string;
-  height?: string;
-  $hover?: string;
-  $hovercolor?: string;
 }
 
-
-const Button = styled.button<{
-  itemType: string; 
-  size: string; 
-  disabled: boolean; 
-  $backgroundColor?: string; 
-  $border?: string; 
-  $borderRadius?: string; 
-  width?: string; 
-  padding?: string;
-  $color?: string;
-  height?: string;
-  $hover?: string;
-  $hovercolor?: string;
-}>`
-  background-color: ${({ $backgroundColor, itemType, theme }) => $backgroundColor || (itemType === 'company' ? theme.colors.primary : theme.colors.secondary)};
-  color: ${({color})=> color || "white"};
-  border: ${({ $border }) => $border || 'none'}; // Usar la prop border
-  border-radius: ${({ $borderRadius }) => $borderRadius || '0.25rem'}; // Usar la prop borderRadius
-  width: ${({ width }) => width || 'auto'}; // Usar la prop width
-  padding: ${({ padding, size }) => padding || (size === 'small' ? '0.25rem 0.5rem' : size === 'large' ? '0.75rem 1.5rem' : '0.5rem 1rem')}; // Usar la prop padding
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
+// Componente estilizado usando transient props (con $)
+const ButtonStyled = styled.button<StyledButtonProps>`
   display: flex;
   align-items: center;
-  text-align: center;
-  font-size: 1rem;
-  font-family: 'Onest', sans-serif;
   justify-content: center;
-  gap: 8px;
+  gap: 0.5rem;
+  width: ${({ $width }) => $width || 'auto'};
+  color: ${({ $color }) => $color || 'white'};
+  border: ${({ $border }) => $border || 'none'};
+  border-radius: ${({ $borderRadius }) => $borderRadius || '50%'};
+  padding: ${({ $size }) => $size || '0.5rem 1rem'};
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
+
+  @media (max-width: 768px) {
+    width: ${({ $width }) => $width || 'auto'};
+  }
+  
+  // Manejo del fondo
+  background-color: ${({ $background, theme }) => {
+    return typeof $background === 'function' ? $background(theme).default : $background;
+  }};
 
   &:hover {
-    background-color: ${({$hover}) => $hover || 'null'};
-    color: ${({$hovercolor}) => $hovercolor || 'null'};
+    background-color: ${({ $background, theme }) => {
+    return typeof $background === 'function' ? $background(theme).hover : $background;
+  }};
+    opacity: 0.9;
   }
 `;
 
-
-const IButton: React.FC<IButton> = ({
+const Button: React.FC<IButton> = ({
   label,
   onClick,
   icon,
   disabled = false,
-  size = 'medium',
-  $backgroundColor,
-  $border,
-  $borderRadius,
-  width,
-  padding,
-  $color,
-  height,
-  $hover,
-  $hovercolor,
+  bg = () => ({ default: 'rgb(168, 85, 247)', hover: 'rgb(140, 70, 200)' }), // Función por defecto
+  size = '0.5rem 1rem',
+  borderRadius = '1rem',
+  iconColor = 'white',
+  iconSize = '1rem',
+  border = 'none',
+  color = 'white',
+  width = 'auto'
 }) => {
-  const itemType = useStore((state) => state.itemType); // Acceder al estado global
-
   return (
-    <Button
+    <ButtonStyled
       onClick={onClick}
-      size={size}
       disabled={disabled}
-      itemType={itemType}
-      $backgroundColor={$backgroundColor}
-      $border={$border} // Pasar border
-      $borderRadius={$borderRadius} // Pasar borderRadius
-      width={width} // Pasar width
-      padding={padding} // Pasar padding
-      color={$color}
-      height={height}
-      $hover={$hover}
-      $hovercolor={$hovercolor}
+      $size={size}
+      $background={bg} // bg puede ser función o string
+      $borderRadius={borderRadius}
+      $border={border}
+      $color={color}
+      $width={width}
     >
-      {icon}
+      {icon && <span style={{ color: iconColor, fontSize: iconSize }}>{icon}</span>}
       {label}
-    </Button>
+    </ButtonStyled>
   );
 };
 
-export default IButton;
-
+export default Button;

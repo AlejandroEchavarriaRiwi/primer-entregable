@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Onest } from "next/font/google"
 import "./globals.css";
-import { ThemeClientProvider } from "@/ui/provider/Provider";
+import { Providers } from "./providers";
 
 const onest = Onest({ weight: "400", subsets: ["latin"] })
 
@@ -20,9 +20,9 @@ export default function RootLayout({
       
         <body className={onest.className}>
           <div className="Background">
-            <ThemeClientProvider>
-              {children}
-            </ThemeClientProvider>
+          <Providers>
+            {children}
+          </Providers>
           </div>
 
         </body>

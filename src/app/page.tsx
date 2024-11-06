@@ -1,101 +1,13 @@
 import HomePage from "@/components/templates/MainTemplate";
+import { CompanyService } from '@/services/company.service';
+import { VacantService } from '@/services/vacantes.service';
 
+const useVacantService = new VacantService()
+const useCompanyService = new CompanyService()
 
 async function getData() {
-  // Simulación de obtención de datos iniciales
-  const companyData = [
-    {
-      id: 1,
-      title: "Tech Innovators",
-      city: "New York",
-      phone: "123-456-7890",
-      firstButtonLabel: "Edit",
-      secondButtonLabel: "Delete",
-    },
-    {
-      id: 2,
-      title: "Green Solutions",
-      city: "San Francisco",
-      phone: "987-654-3210",
-      firstButtonLabel: "Edit",
-      secondButtonLabel: "Delete",
-    },
-    {
-      id: 3,
-      title: "Cloud Networks",
-      city: "Austin",
-      phone: "555-123-4567",
-      firstButtonLabel: "Edit",
-      secondButtonLabel: "Delete",
-    },
-    {
-      id: 4,
-      title: "Tech Innovators",
-      city: "New York",
-      phone: "123-456-7890",
-      firstButtonLabel: "Edit",
-      secondButtonLabel: "Delete",
-    },
-    {
-      id: 5,
-      title: "Green Solutions",
-      city: "San Francisco",
-      phone: "987-654-3210",
-      firstButtonLabel: "Edit",
-      secondButtonLabel: "Delete",
-    },
-    {
-      id: 6,
-      title: "Cloud Networks",
-      city: "Austin",
-      phone: "555-123-4567",
-      firstButtonLabel: "Edit",
-      secondButtonLabel: "Delete",
-    },
-  ];
-
-  const jobData = [
-    {
-      id: 1,
-      title: "Frontend Developer",
-      city: "Miami",
-      phone: "123-456-7890",
-      firstButtonLabel: "Apply",
-      secondButtonLabel: "Save",
-    },
-    {
-      id: 2,
-      title: "Backend Developer",
-      city: "Denver",
-      phone: "987-654-3210",
-      firstButtonLabel: "Apply",
-      secondButtonLabel: "Save",
-    },
-    {
-      id: 3,
-      title: "DevOps Engineer",
-      city: "Seattle",
-      phone: "555-123-4567",
-      firstButtonLabel: "Apply",
-      secondButtonLabel: "Save",
-    },
-    {
-      id: 4,
-      title: "Backend Developer",
-      city: "Denver",
-      phone: "987-654-3210",
-      firstButtonLabel: "Apply",
-      secondButtonLabel: "Save",
-    },
-    {
-      id: 5,
-      title: "DevOps Engineer",
-      city: "Seattle",
-      phone: "555-123-4567",
-      firstButtonLabel: "Apply",
-      secondButtonLabel: "Save",
-    },
-  ];
+  const companyData = await useCompanyService.findAll(3, 6)
+  const jobData = await useVacantService.findAll(1, 6)
 
   // Simula que las compañías son los datos iniciales
   return {

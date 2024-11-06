@@ -1,68 +1,63 @@
-'use client'
+'use client';
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { DefaultTheme } from 'styled-components';
 import Card from '../molecules/Card';
 import Modal from './Modal';
 import CompanyForm, { CompanyFormData } from '../molecules/CompanyForm';
 import JobForm, { JobFormData } from '../molecules/JobForm';
-import IButton from '../atoms/Button';
-import { CirclePlus } from 'lucide-react';
-import { useStore } from '../../store/store';
-
-const AddIcon = styled(CirclePlus)`
-  color: white;
-  cursor: pointer;
-`;
+import Button from '../atoms/Button';
+import { CirclePlus } from "lucide-react";
+import { ICard } from '@/types/card.model';
 
 const Container = styled.div`
-  width: 100%;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
-const TitleContainer = styled.div`
-  width: 90%;
+const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0px;
-
-`
+  width: 100%;
+  margin-bottom: 1rem;
+`;
 
 const GridContainer = styled.div`
-  width: 80%;
-  margin-top: 20px;
   display: grid;
-  justify-content: center;
-  align-items: center;
-  grid-template-columns: repeat(3, 1fr);
-  justify-items: center;
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  max-width: 1500px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    max-width: 1200px;
+  }
 `;
 
 
-interface ICardData {
-  id: number;
+interface ICardContainer {
+  cardData: ICard[];
+  type: 'company' | 'vacant';
   title: string;
-  city: string;
-  phone: string;
-  firstButtonLabel: string;
-  secondButtonLabel: string;
+  onAdd: (data: CompanyFormData | JobFormData) => void;
+  onEdit: (id: number | string, data: CompanyFormData | JobFormData) => void;
+  onDelete: (id: number | string) => void;
 }
 
-interface ICardContainer {
-  title: string;
-  cardData: ICardData[];
-  type: 'company' | 'job';
-  onAdd: (data: CompanyFormData | JobFormData) => void;
-  onEdit: (id: number, data: CompanyFormData | JobFormData) => void;
-  onDelete: (id: number) => void;
-}
+
+const Title = styled.h1`
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+`;
 
 const CardContainer: React.FC<ICardContainer> = ({
-  title,
   cardData,
+  title,
   type,
   onAdd,
   onEdit,
@@ -70,11 +65,11 @@ const CardContainer: React.FC<ICardContainer> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'add' | 'edit'>('add');
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<number | string | null>(null);
 
-  const handleOpenModal = (mode: 'add' | 'edit', id?: number) => {
+  const handleOpenModal = (mode: 'add' | 'edit', id?: number | string) => {
     setModalMode(mode);
-    if (id) setSelectedId(id);
+    if (id) setSelectedId(id); // No necesitas conversión
     setIsModalOpen(true);
   };
 
@@ -87,68 +82,76 @@ const CardContainer: React.FC<ICardContainer> = ({
     if (modalMode === 'add') {
       onAdd(data);
     } else if (modalMode === 'edit' && selectedId !== null) {
-      onEdit(selectedId, data);
+      onEdit(selectedId, data); // No necesita conversión
     }
     handleCloseModal();
   };
-
-  const getInitialData = (id: number) => {
-    const card = cardData.find(card => card.id === id);
+  const getInitialData = (id: number | string | null) => {
+    if (id === null) return undefined;
+    const card = cardData.find(card => card.id === id.toString() || card.id === id);
     if (!card) return undefined;
 
-    // Convertir los datos de la card al formato del formulario
     if (type === 'company') {
       return {
-        name: card.title,
-        ubication: card.city,
-        contact: card.phone,
+        name: card.name, 
+        location: card.location,
+        contact: card.contact,
       } as CompanyFormData;
     } else {
       return {
         title: card.title,
-        description: card.city,
-        state: card.phone,
-        company: '',
+        description: card.description,
+        status: card.status,
+        companyId: card.company?.name || '', // Encadenamiento opcional
       } as JobFormData;
     }
   };
-
-  const itemType = useStore((state) => state.itemType);
+  const getButtonColor = (type: 'company' | 'vacant') => {
+    return (theme: DefaultTheme) => {
+      const color = type === 'company' ? theme.colors.accent.pink.default : theme.colors.accent.purple.default;
+      return {
+        default: color,
+        hover: type === 'company' ? theme.colors.accent.pink.hover : theme.colors.accent.purple.hover,
+      };
+    };
+  };
 
   return (
     <Container>
-      <TitleContainer>
-        <h1>{title}</h1>
-        <IButton
-          label={`Agregar ${type === 'company' ? 'Compañía' : 'Vacante'}`}
+      <HeaderContainer>
+        <Title>{title}</Title>
+        <Button
           onClick={() => handleOpenModal('add')}
-          icon={<AddIcon />}
-          $borderRadius='20px'
-          $hover={itemType === 'job' ? "rgb(147, 51, 234)" : "rgb(219, 39, 119)"
-          }
+          label={`Agregar ${type === 'company' ? 'Empresa' : 'Vacante'}`}
+          icon={<CirclePlus />}
+          bg={getButtonColor(type)}
+          borderRadius="1.7rem"
+          width='20% 15%'
         />
-      </TitleContainer>
-
+      </HeaderContainer>
 
       <GridContainer>
         {cardData.map((data) => (
           <Card
             key={data.id}
             title={data.title}
-            city={data.city}
-            phone={data.phone}
-            onFirstButtonClick={() => handleOpenModal('edit', data.id)}
-            onSecondButtonClick={() => onDelete(data.id)}
-            firstButtonLabel={data.firstButtonLabel}
-            secondButtonLabel={data.secondButtonLabel}
+            name={data.name}
+            location={data.location}
+            contact={data.contact}
+            description={data.description}
+            status={data.status}
+            onFirstButtonClick={() => handleOpenModal('edit', data.id)} // data.id es de tipo number | string
+            onSecondButtonClick={() => onDelete(data.id)} // data.id es de tipo number | string
+            id={data.id.toString()} // Si necesitas un string para el componente Card
           />
+
         ))}
       </GridContainer>
 
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        title={`${modalMode === 'add' ? 'Agregar' : 'Editar'} ${type === 'company' ? 'Compañía' : 'Vacante'}`}
+        title={`${modalMode === 'add' ? 'Agregar' : 'Editar'} ${type === 'company' ? 'Empresa' : 'Vacante'}`}
       >
         {type === 'company' ? (
           <CompanyForm
